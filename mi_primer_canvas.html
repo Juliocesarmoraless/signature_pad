@@ -1,0 +1,114 @@
+<canvas id="miCanvas" width="500" height="300" style="border:solid 1px red;"></canvas>
+<br><br>
+<canvas id="segundoCanvas" width="500" height="300" style="border:5px solid black"></canvas>
+<script>
+  const canvas = document.getElementById('miCanvas');
+  const ctx = canvas.getContext('2d');
+  // Dibujamos un círculo azul
+  ctx.fillStyle = '#fff145';
+  ctx.beginPath();
+  ctx.arc(250, 150, 20, 0, Math.PI * 2); // (x, y, radio, inicio, fin)
+  ctx.fill();
+
+  // Dibujamos texto
+  ctx.fillStyle = 'black';
+  ctx.font = '10px Arial';
+  ctx.fillText('Hola Canvas!', 0, 150);
+
+  //Dibujando un rectangulo 
+  ctx.fillStyle = "lightblue";
+  ctx.fillRect(10,10,100,50)
+
+
+  //Dibujando en el borde del canva
+  // width 500 height 300
+  ctx.fillStyle=" green"
+  ctx.fillRect(390,190,100,100)
+
+  //Dibujar una linea 
+  ctx.beginPath();
+ctx.moveTo(0, 0);           // desde (0,0)
+ctx.lineTo(500, 300);       // hasta (500,300)
+ctx.strokeStyle = 'black';
+ctx.stroke();
+
+ //CANVAS N°2
+ //________________________________________________
+  const canvas2 = document.getElementById("segundoCanvas")
+  const ctx2 =canvas2.getContext('2d')
+    //Cuadrado rojo esquina superior izquierda
+  ctx2.fillStyle="red"
+  ctx2.fillRect(0,0,50,50)
+
+  //Cuadrado verde esquina superior derecha
+  ctx2.fillStyle="lightgreen"
+  ctx2.fillRect(450,0,50,50)
+  
+  //Cuadrado en la esqina inferior izquierda
+
+  ctx2.fillStyle="lightblue"
+  ctx2.fillRect(0,250,50,50)
+
+  //Cuadrado en la esquina inferior derecha
+  ctx2.fillStyle="pink"
+  ctx2.fillRect(450,250,50,50)
+
+  ctx2.fillStyle="black"
+  ctx2.font ="20px arial"
+  ctx2.fillText("Mi primer canvas",180,50)
+    //CREANDO UN RECTANGULO CON LINEAS JAJA
+    ctx2.beginPath();
+    ctx2.moveTo(10, 10);           // desde (10,10)
+    ctx2.lineTo(490, 10);       // hasta (490, 10)
+    ctx2.strokeStyle = 'black';
+    ctx2.stroke();
+
+    ctx2.beginPath();
+    ctx2.moveTo(490, 10);           // desde (490,10)
+    ctx2.lineTo(490, 290);       // hasta (490, 290)
+    ctx2.strokeStyle = 'black';
+    ctx2.stroke();
+
+    ctx2.beginPath();
+    ctx2.moveTo(490, 290);           // desde (490, 290)
+    ctx2.lineTo(10, 290);       // hasta (10, 290)
+    ctx2.strokeStyle = 'black';
+    ctx2.stroke();
+
+    ctx2.beginPath();
+    ctx2.moveTo(10, 290);           // desde (10, 290)
+    ctx2.lineTo(10, 10);       // hasta (10, 10)
+    ctx2.strokeStyle = 'black';
+    ctx2.stroke();
+
+    //Creando un rectangulo mas grande y resumido que el anterior jaj
+
+    ctx2.fillStyle="transparent"
+    ctx2.fillRect(20,20,460,260)
+
+
+    ctx2.fillStyle="black"
+    ctx2.fillText("Hola",50,100)
+    ctx2.font ="10px arial"
+
+    
+    //Creando una triangulo
+    ctx2.fillStyle="black"
+    ctx2.beginPath();
+    ctx2.moveTo(250, 100);    //desde ()         
+    ctx2.lineTo(210, 180);       
+    ctx2.stroke();
+    
+    ctx2.fillStyle="black"
+    ctx2.beginPath();
+    ctx2.moveTo(250, 100);    //desde ()         
+    ctx2.lineTo(290, 180);       
+    ctx2.stroke();
+
+    ctx2.fillStyle="black"
+    ctx2.beginPath();
+    ctx2.moveTo(290, 180);    //desde ()         
+    ctx2.lineTo(210, 180);       
+    ctx2.stroke();
+
+</script>

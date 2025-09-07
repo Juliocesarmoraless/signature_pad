@@ -1,0 +1,187 @@
+<style>
+    .btn-group {
+        display: flex;
+        gap: 4px;
+        justify-content: center;
+        margin-top: 1rem;
+    }
+
+    .submit-button, .clear-button {
+        flex: 1;
+        background-color: var(--primary-color);
+        border: none;
+        padding: 0.5rem 1rem;
+        color: #fff;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .submit-button:hover, .clear-button:hover {
+        opacity: 0.9;
+    }
+
+    @media (pointer: coarse) {
+        body {
+            overflow: hidden;
+        }
+    }
+
+    :root {
+        --primary-color: #4b00ff;
+    }
+
+    a {
+        color: var(--primary-color);
+        text-decoration: none;
+        margin: 1rem 0;
+        display: inline-block;
+    }
+
+    .signature-pad-form {
+        width: 30rem;
+        max-width: 100%;
+        margin: 2rem auto;
+        text-align: center;
+        padding: 1rem;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        background: #f9f9f9;
+    }
+
+    .signature-pad {
+        cursor: crosshair;
+        width: 100%;
+        height: 200px;
+        border: 2px solid var(--primary-color);
+        border-radius: 4px;
+        background: #fff;
+    }
+</style>
+
+<h3>Firma</h3>
+<form class="signature-pad-form" action="#" method="POST">
+    <canvas class="signature-pad"></canvas>
+    <div class="btn-group">
+        <button type="button" class="clear-button">Limpiar</button>
+        <button type="submit" class="submit-button">Guardar</button>
+    </div>
+</form>
+
+<script>
+    const canvas = document.querySelector('canvas');
+    const form = document.querySelector('.signature-pad-form');
+    const clearButton = document.querySelector('.clear-button'); // Error corregido: era '-clear-button'
+
+    // Ajustar tamaño del canvas al tamaño del contenedor
+    const resizeCanvas = () => {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = 200;
+    };
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas(); // Inicializar tamaño
+
+    const ctx = canvas.getContext('2d');
+    let writingMode = false; // Error corregido: "writngMode"
+    let lastX, lastY;
+
+    // Configuración del trazo
+    ctx.lineWidth = 2;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#000';
+
+    // Función para obtener la posición del puntero
+    const getCursorPosition = (event) => {
+        const rect = canvas.getBoundingClientRect();
+        const positionX = event.clientX - rect.left;
+        const positionY = event.clientY - rect.top;
+        return [positionX, positionY];
+    };
+
+    // Evento cuando se presiona el puntero (mouse o touch)
+    const handlePointerDown = (event) => {
+        writingMode = true;
+        const [positionX, positionY] = getCursorPosition(event);
+        ctx.beginPath();
+        ctx.moveTo(positionX, positionY);
+        lastX = positionX;
+        lastY = positionY;
+        event.preventDefault(); // Útil para dispositivos táctiles
+    };
+
+    // Evento cuando se mueve el puntero
+    const handlePointerMove = (event) => {
+        if (!writingMode) return;
+        const [positionX, positionY] = getCursorPosition(event);
+        ctx.lineTo(positionX, positionY);
+        ctx.stroke();
+        lastX = positionX;
+        lastY = positionY;
+        event.preventDefault();
+    };
+
+    // Evento cuando se suelta el puntero
+    const handlePointerUp = () => {
+        writingMode = false;
+        ctx.closePath();
+    };
+
+    // Escuchar eventos del canvas
+    canvas.addEventListener('pointerdown', handlePointerDown, { passive: false });
+    canvas.addEventListener('pointermove', handlePointerMove, { passive: false });
+    canvas.addEventListener('pointerup', handlePointerUp);
+    canvas.addEventListener('pointerleave', handlePointerUp); // Si el puntero sale del canvas
+
+    // Botón de limpiar
+    clearButton.addEventListener('click', () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
+
+    // Función auxiliar para limpiar
+    const clearPad = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    };
+
+    // Manejo del envío del formulario
+    form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    // Verificar si hay algo dibujado
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    const hasSignature = imageData.some(channel => channel !== 0);
+
+    if (!hasSignature) {
+        alert('Por favor, firma antes de guardar.');
+        return;
+    }
+
+    // Convertir canvas a URL de imagen
+    const imageURL = canvas.toDataURL('image/png');
+
+    // Crear enlace de descarga
+    const downloadLink = document.createElement('a');
+    downloadLink.href = imageURL;
+    downloadLink.download = 'firma.png'; // Nombre del archivo
+    downloadLink.textContent = 'Descargando...';
+
+    // Simular clic para descargar
+    document.body.appendChild(downloadLink); // Necesario en algunos navegadores
+    downloadLink.click();
+    document.body.removeChild(downloadLink); // Limpiar
+
+    // Opcional: mostrar la firma en pantalla
+    const image = document.createElement('img');
+    image.src = imageURL;
+    image.width = canvas.width;
+    image.height = canvas.height;
+    image.style.display = 'block';
+    image.style.margin = '1rem auto';
+    image.style.border = '1px solid #ddd';
+
+    const existingImg = form.querySelector('img');
+    if (existingImg) form.replaceChild(image, existingImg);
+    else form.insertBefore(image, form.querySelector('.btn-group'));
+});
+</script>

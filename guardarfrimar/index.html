@@ -1,0 +1,99 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Firma Electrónica</title>
+  <style>
+    canvas {
+      border: 2px solid #4b00ff;
+      border-radius: 4px;
+      cursor: crosshair;
+    }
+    button {
+      margin: 0.5rem;
+      padding: 0.5rem 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h3>Firma electrónica</h3>
+  <form id="signature-form">
+    <canvas id="signature-pad" width="500" height="200"></canvas>
+    <div>
+      <button type="button" id="clear">Limpiar</button>
+      <button type="submit">Guardar Firma</button>
+    </div>
+  </form>
+
+  <script>
+    const canvas = document.getElementById('signature-pad');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+
+    // Configuración del trazo
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#000';
+
+    // Obtener posición relativa al canvas
+    function getPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
+    }
+
+    // Eventos de dibujo
+    canvas.addEventListener('mousedown', (e) => {
+      isDrawing = true;
+      const pos = getPos(e);
+      ctx.beginPath();
+      ctx.moveTo(pos.x, pos.y);
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+      if (!isDrawing) return;
+      const pos = getPos(e);
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+    });
+
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mouseout', () => isDrawing = false);
+
+    // Botón Limpiar
+    document.getElementById('clear').addEventListener('click', () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
+
+    // Enviar firma al servidor
+    document.getElementById('signature-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const dataURL = canvas.toDataURL('image/png');
+
+      // Validar que haya firma
+      if (dataURL === 'data:image/png;base64,') {
+        alert('Por favor, firma antes de guardar.');
+        return;
+      }
+
+      // Enviar al PHP
+      const response = await fetch('guardar_firma.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firma: dataURL })
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        alert('✅ Firma guardada con éxito.');
+      } else {
+        alert('❌ Error: ' + result.message);
+      }
+    });
+  </script>
+</body>
+</html>
