@@ -1,18 +1,18 @@
-<canvas id="miCanvas" width="500" height="300" style="border:solid 1px red;"></canvas>
+<canvas id="miCanvas" width="500" height="300" style="border:solid 3px red;"></canvas>
 <br><br>
 <canvas id="segundoCanvas" width="500" height="300" style="border:5px solid black"></canvas>
 <script>
   const canvas = document.getElementById('miCanvas');
   const ctx = canvas.getContext('2d');
   // Dibujamos un círculo azul
-  ctx.fillStyle = '#fff145';
   ctx.beginPath();
+  ctx.fillStyle = '#fff145';
   ctx.arc(250, 150, 20, 0, Math.PI * 2); // (x, y, radio, inicio, fin)
   ctx.fill();
 
   // Dibujamos texto
   ctx.fillStyle = 'black';
-  ctx.font = '10px Arial';
+  ctx.font = '20px Arial';
   ctx.fillText('Hola Canvas!', 0, 150);
 
   //Dibujando un rectangulo 
@@ -23,15 +23,20 @@
   //Dibujando en el borde del canva
   // width 500 height 300
   ctx.fillStyle=" green"
-  ctx.fillRect(390,190,100,100)
+  ctx.fillRect(400,200,100,100)
 
   //Dibujar una linea 
   ctx.beginPath();
-ctx.moveTo(0, 0);           // desde (0,0)
-ctx.lineTo(500, 300);       // hasta (500,300)
-ctx.strokeStyle = 'black';
-ctx.stroke();
+  ctx.moveTo(0, 0);           // desde (0,0)
+  ctx.lineTo(500, 300);       // hasta (500,300)
+  ctx.strokeStyle = 'black';
+  ctx.stroke();
 
+  ctx.beginPath();
+  ctx.fillStyle='black'
+  ctx.moveTo(500,0)
+  ctx.lineTo(0,300)
+  ctx.stroke();
  //CANVAS N°2
  //________________________________________________
   const canvas2 = document.getElementById("segundoCanvas")
